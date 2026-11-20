@@ -1,5 +1,6 @@
+{# Tela de login. #}
 {% extends "base.html" %}
-{% from "_campo.html" import campo %}
+{% from "componentes/campo.html" import campo %}
 {% block titulo %}Entrar{% endblock %}
 {% block conteudo %}
 <section class="form-container">
@@ -13,7 +14,7 @@
       <div class="campo checkbox">{{ form.lembrar() }} {{ form.lembrar.label }}</div>
       <button type="submit" class="btn">Entrar</button>
     </form>
-    <p style="margin-top: 20px;">Não possui uma conta? <a href="{{ url_for('auth.cadastro') }}">Cadastre-se</a></p>
+    <p class="form-rodape">Não possui uma conta? <a href="{{ url_for('auth.cadastro') }}">Cadastre-se</a></p>
   </div>
 </section>
 {% endblock %}

@@ -1,5 +1,6 @@
+{# Tela de cadastro de conta (empresa, nome, e-mail e senha). #}
 {% extends "base.html" %}
-{% from "_campo.html" import campo %}
+{% from "componentes/campo.html" import campo %}
 {% block titulo %}Criar conta{% endblock %}
 {% block conteudo %}
 <section class="form-container">
@@ -15,7 +16,7 @@
       {{ campo(form.confirmar, autocomplete="new-password") }}
       <button type="submit" class="btn">Criar conta</button>
     </form>
-    <p style="margin-top: 20px;">Já possui conta? <a href="{{ url_for('auth.login') }}">Entrar</a></p>
+    <p class="form-rodape">Já possui conta? <a href="{{ url_for('auth.login') }}">Entrar</a></p>
   </div>
 </section>
 {% endblock %}

@@ -35,7 +35,7 @@ def cadastro():
         login_user(usuario)
         flash("Conta criada. Boas-vindas ao Acesso+!", "sucesso")
         return redirect(url_for("main.painel"))
-    return render_template("auth/cadastro.html", form=form)
+    return render_template("conta/cadastro.html", form=form)
 
 
 @bp.route("/login", methods=["GET", "POST"])
@@ -54,7 +54,7 @@ def login():
         else:
             login_user(usuario, remember=form.lembrar.data)
             return redirect(destino_seguro(request.args.get("next")) or url_for("main.painel"))
-    return render_template("auth/login.html", form=form)
+    return render_template("conta/login.html", form=form)
 
 
 @bp.route("/logout", methods=["POST"])

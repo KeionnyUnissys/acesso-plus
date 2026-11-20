@@ -1,3 +1,4 @@
+{# Molde comum de todas as telas: cabeçalho com logo e menu, avisos, conteúdo e rodapé. #}
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -8,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilo.css') }}">
   <link rel="icon" href="{{ url_for('static', filename='img/acesso-icone.png') }}">
 </head>
 <body>
@@ -42,7 +43,7 @@
   <main id="conteudo" tabindex="-1">
     {% with mensagens = get_flashed_messages(with_categories=true) %}
       {% if mensagens %}
-        <div class="container avisos" role="status" style="padding-top: 24px;">
+        <div class="container avisos" role="status">
           {% for categoria, texto in mensagens %}
             <p class="aviso aviso-{{ categoria }}">{{ texto }}</p>
           {% endfor %}

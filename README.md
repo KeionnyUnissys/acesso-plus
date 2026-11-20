@@ -66,7 +66,7 @@ Elementos escondidos (`display:none`, `hidden`, `aria-hidden="true"`, `<noscript
   (ex.: 3 imagens sem alt = 30 + 6 + 6 = 42 pontos a menos em Acessibilidade).
 - A nota nunca fica negativa. A **nota geral** é a média das 6 categorias.
 
-Os textos dos problemas ficam em `app/catalogo.py` (versão inicial). A Maria Eduarda pode revisar as frases ali
+Os textos dos problemas ficam em `sistema/catalogo.py` (versão inicial). A Maria Eduarda pode revisar as frases ali
 e rodar `flask --app run init-db` para atualizar o banco.
 
 ## Próximas entregas
@@ -121,18 +121,40 @@ python -m pytest -q
 
 ## Onde fica cada coisa
 
-| Pasta / arquivo | Para quê | Quem mexe |
-|-----------------|----------|-----------|
-| `app/models.py` | Tabelas do banco (seguem o Projeto Físico) | Keionny |
-| `app/auth.py` | Cadastro, login e logout | Keionny |
-| `app/main.py` | Painel, cadastro de sites e análises | Keionny |
-| `app/scanner.py` | Baixa a página, verifica e calcula a nota | Keionny |
-| `app/catalogo.py` | Textos dos problemas (o que é, quem afeta, como corrigir) | Maria Eduarda |
-| `app/templates/` | Telas em HTML (`analise.html` é a tela do resultado) | Letícia |
-| `app/static/style.css` | Visual | Letícia |
-| `app/cli.py` | Categorias e planos iniciais | Keionny / Maria Eduarda |
-| `database/schema_postgresql.sql` | Script SQL para PostgreSQL | — |
-| `tests/` | Testes automáticos | Keionny |
+O projeto é dividido em duas partes: **interface** (o que aparece na tela) e **sistema** (o código Python que faz o trabalho).
+
+```
+acesso-plus/
+├── interface/              ← parte visual (Letícia)
+│   ├── telas/              ← páginas em HTML
+│   │   ├── base.html       ← cabeçalho, menu e rodapé usados por todas as telas
+│   │   ├── index.html      ← página inicial
+│   │   ├── painel.html     ← Meus sites
+│   │   ├── analise.html    ← resultado da análise
+│   │   ├── erro.html
+│   │   ├── conta/          ← login.html e cadastro.html
+│   │   └── componentes/    ← campo.html (campo de formulário reutilizado)
+│   └── estaticos/
+│       ├── css/estilo.css  ← todo o visual, dividido em 14 seções numeradas
+│       ├── js/relatorio.js ← botão "Salvar relatório em PDF"
+│       └── img/            ← logo e ícone
+├── sistema/                ← código Python (Keionny)
+│   ├── __init__.py         ← monta o app e liga a pasta interface/
+│   ├── models.py           ← tabelas do banco (seguem o Projeto Físico)
+│   ├── auth.py             ← cadastro, login e logout
+│   ├── main.py             ← Meus sites e análises
+│   ├── scanner.py          ← baixa a página, verifica e calcula a nota
+│   ├── catalogo.py         ← textos dos problemas (Maria Eduarda revisa)
+│   ├── forms.py            ← formulários e validações
+│   └── cli.py              ← comandos init-db e criar-demo
+├── banco_de_dados/         ← script SQL para PostgreSQL
+├── testes/                 ← testes automáticos
+├── config.py               ← configurações
+└── run.py                  ← ponto de partida (flask --app run run)
+```
+
+As telas abertas direto no VS Code ou no navegador aparecem sem imagens e com os `{{ }}` à mostra, porque quem
+preenche essas partes é o Flask. Para ver as telas de verdade, rode o sistema e abra http://127.0.0.1:5000.
 
 ### Para a Letícia (telas)
 

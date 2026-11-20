@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from flask import Flask, render_template
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -9,10 +11,16 @@ csrf = CSRFProtect()
 
 
 def create_app(config_object="config.Config"):
-    app = Flask(__name__, instance_relative_config=True)
+    # A parte visual fica separada do código, na pasta interface/ na raiz do projeto
+    pasta_interface = Path(__file__).resolve().parent.parent / "interface"
+    app = Flask(
+        __name__,
+        instance_relative_config=True,
+        template_folder=str(pasta_interface / "telas"),
+        static_folder=str(pasta_interface / "estaticos"),
+    )
     app.config.from_object(config_object)
 
-    from pathlib import Path
     Path(app.instance_path).mkdir(parents=True, exist_ok=True)
 
     db.init_app(app)

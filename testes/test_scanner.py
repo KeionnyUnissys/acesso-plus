@@ -3,8 +3,8 @@ import socket
 
 import pytest
 
-from app import create_app, db, scanner
-from app.models import Analise, ProblemaEncontrado
+from sistema import create_app, db, scanner
+from sistema.models import Analise, ProblemaEncontrado
 
 PAGINA_BOA = """<!doctype html>
 <html lang="pt-BR"><head><meta charset="utf-8">
