@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block titulo %}Resultado da análise{% endblock %}
+{% block conteudo %}
+{% set nomes = {'CRITICO': 'Crítico', 'IMPORTANTE': 'Importante', 'MELHORIA': 'Melhoria', 'APROVADO': 'Aprovado'} %}
+{% macro classe(n) %}{{ 'boa' if n >= 70 else ('media' if n >= 50 else 'ruim') }}{% endmacro %}
+<div class="container pagina">
+  <p class="nao-imprimir"><a href="{{ url_for('main.painel') }}">← Voltar para Meus sites</a></p>
+
+  <div>
+    <h1>Resultado da análise</h1>
+    <p class="sub">{{ analise.site.url }} · analisado em {{ analise.data_analise.strftime('%d/%m/%Y às %H:%M') }}</p>
+  </div>
+
+  <section class="resumo" aria-label="Resumo da análise">
+    <div class="card score-geral">
+      <h2>Nota geral de acessibilidade</h2>
+      <p class="numero {{ classe(analise.pontuacao_geral) }}">{{ analise.pontuacao_geral|round|int }}<span>/100</span></p>
+      <p class="faixa">{{ faixa }}</p>
+    </div>
+    <div class="card">
+      <h2>Resumo</h2>
+      <ul class="contagem">
+        {% for p in ['CRITICO', 'IMPORTANTE', 'MELHORIA', 'APROVADO'] %}
+          <li><span class="selo selo-{{ p|lower }}">{{ nomes[p] }}</span> {{ contagem[p] }} {{ 'verificação' if contagem[p] == 1 else 'verificações' }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <section aria-labelledby="por-categoria">
+    <h2 id="por-categoria" style="margin-bottom: 12px;">Nota por categoria</h2>
+    <ul class="dashboard-grid">
+      {% for p in pontuacoes %}
+        {% set n = p.pontuacao|round|int %}
+        <li class="card-score">
+          <h3>{{ p.categoria.nome }}</h3>
+          <p class="valor">{{ n }}<span class="sr"> de 100</span></p>
+          <span class="barra" aria-hidden="true"><span class="{{ classe(n) }}" style="width: {{ n }}%"></span></span>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  {% if grupos %}
+  <section class="card" aria-labelledby="proximos-passos">
+    <h2 id="proximos-passos">Por onde começar</h2>
+    <p style="margin-bottom: 10px;">Corrija primeiro os itens críticos. Depois, analise o site de novo para ver a nota subir.</p>
+    <ol class="passos-correcao">
+      {% for g in grupos[:5] %}<li><strong>{{ g.problema.titulo }}:</strong> {{ g.problema.recomendacao }}</li>{% endfor %}
+    </ol>
+  </section>
+  {% endif %}
+
+  <section aria-labelledby="problemas">
+    <h2 id="problemas" style="margin-bottom: 12px;">Problemas encontrados</h2>
+    {% if grupos %}
+      <div class="problemas-lista">
+      {% for g in grupos %}
+        <article class="card problema {{ g.prioridade|lower }}">
+          <h3><span class="selo selo-{{ g.prioridade|lower }}">{{ nomes[g.prioridade] }}</span> {{ g.problema.titulo }}
+            {% if g.itens|length > 1 %}<span class="qtd">({{ g.itens|length }} ocorrências)</span>{% endif %}</h3>
+          <p class="cat">{{ g.problema.categoria.nome }}</p>
+          <dl>
+            <dt>O que é</dt><dd>{{ g.problema.descricao }}</dd>
+            <dt>Quem é afetado</dt><dd>{{ g.problema.impacto }}</dd>
+            <dt>Como corrigir</dt><dd>{{ g.problema.recomendacao }}</dd>
+          </dl>
+          <details>
+            <summary>Onde está{{ ' (mostrando 10 de ' ~ g.itens|length ~ ')' if g.itens|length > 10 }}</summary>
+            <ul class="locais">
+              {% for oc in g.itens[:10] %}
+                <li>{% if oc.localizacao %}<strong>{{ oc.localizacao }}</strong>{% endif %}
+                  {% if oc.elemento_afetado %}<code>{{ oc.elemento_afetado }}</code>{% endif %}</li>
+              {% endfor %}
+            </ul>
+          </details>
+        </article>
+      {% endfor %}
+      </div>
+    {% else %}
+      <p class="card">Nenhum problema encontrado nas verificações automáticas.</p>
+    {% endif %}
+  </section>
+
+  {% if aprovados %}
+  <section class="card" aria-labelledby="aprovados">
+    <h2 id="aprovados">Verificações aprovadas</h2>
+    <ul class="aprovados">
+      {% for p in aprovados %}<li><span class="selo selo-aprovado">Aprovado</span> {{ textos_aprovado.get(p.codigo, p.titulo) }} <span class="cat">· {{ p.categoria.nome }}</span></li>{% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  {% if historico|length > 1 %}
+  <section class="card" aria-labelledby="historico">
+    <h2 id="historico">Histórico deste site</h2>
+    <ul class="historico">
+      {% for a in historico %}
+        <li>
+          {% if a.id_analise == analise.id_analise %}
+            <strong>{{ a.data_analise.strftime('%d/%m/%Y %H:%M') }}: {{ a.pontuacao_geral|round|int }}/100</strong> (esta análise)
+          {% else %}
+            <a href="{{ url_for('main.ver_analise', id_analise=a.id_analise) }}">{{ a.data_analise.strftime('%d/%m/%Y %H:%M') }}: {{ a.pontuacao_geral|round|int }}/100</a>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <p class="aviso aviso-aviso">Esta análise verifica a página inicial de forma automática. Ela ajuda a encontrar barreiras, mas não garante que o site seja 100% acessível: alguns critérios, como contraste de cores e clareza dos textos, só uma pessoa consegue avaliar.</p>
+
+  <div class="acoes-pagina nao-imprimir">
+    <button type="button" class="btn" id="imprimir">Salvar relatório em PDF</button>
+    <form method="post" action="{{ url_for('main.analisar_site', id_site=analise.site.id_site) }}" class="inline">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="btn-outline">Analisar de novo</button>
+    </form>
+  </div>
+</div>
+<script>
+  // Abre os detalhes antes de imprimir, para o PDF mostrar onde está cada problema
+  document.getElementById('imprimir').addEventListener('click', function () {
+    document.querySelectorAll('details').forEach(function (d) { d.open = true; });
+    window.print();
+  });
+</script>
+{% endblock %}

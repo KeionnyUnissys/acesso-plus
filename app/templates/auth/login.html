@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_campo.html" import campo %}
+{% block titulo %}Entrar{% endblock %}
+{% block conteudo %}
+<section class="form-container">
+  <div class="card form-card">
+    <h1>Entrar</h1>
+    <p>Faça login para acessar as análises dos seus sites.</p>
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      {{ campo(form.email, autocomplete="email") }}
+      {{ campo(form.senha, autocomplete="current-password") }}
+      <div class="campo checkbox">{{ form.lembrar() }} {{ form.lembrar.label }}</div>
+      <button type="submit" class="btn">Entrar</button>
+    </form>
+    <p style="margin-top: 20px;">Não possui uma conta? <a href="{{ url_for('auth.cadastro') }}">Cadastre-se</a></p>
+  </div>
+</section>
+{% endblock %}

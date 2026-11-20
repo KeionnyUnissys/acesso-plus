@@ -1,0 +1,16 @@
+{# Campo de formulário com rótulo, dica e erro ligados ao campo por aria-describedby #}
+{% macro campo(f, autocomplete=None, dica=None) %}
+  {% set ids = [] %}
+  {% if dica %}{% set _ = ids.append(f.id ~ '-dica') %}{% endif %}
+  {% if f.errors %}{% set _ = ids.append(f.id ~ '-erro') %}{% endif %}
+  {% set attrs = {} %}
+  {% if autocomplete %}{% set _ = attrs.update({'autocomplete': autocomplete}) %}{% endif %}
+  {% if ids %}{% set _ = attrs.update({'aria-describedby': ids|join(' ')}) %}{% endif %}
+  {% if f.errors %}{% set _ = attrs.update({'aria-invalid': 'true'}) %}{% endif %}
+  <div class="campo{% if f.errors %} com-erro{% endif %}">
+    {{ f.label }}
+    {% if dica %}<p class="dica" id="{{ f.id }}-dica">{{ dica }}</p>{% endif %}
+    {{ f(**attrs) }}
+    {% if f.errors %}<p class="erro" id="{{ f.id }}-erro">{{ f.errors|join(' ') }}</p>{% endif %}
+  </div>
+{% endmacro %}

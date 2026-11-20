@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% from "_campo.html" import campo %}
+{% block titulo %}Criar conta{% endblock %}
+{% block conteudo %}
+<section class="form-container">
+  <div class="card form-card">
+    <h1>Criar conta</h1>
+    <p>Preencha os dados abaixo para cadastrar sua empresa e começar a usar o Acesso+.</p>
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      {{ campo(form.empresa, autocomplete="organization") }}
+      {{ campo(form.nome, autocomplete="name") }}
+      {{ campo(form.email, autocomplete="email") }}
+      {{ campo(form.senha, autocomplete="new-password", dica="Pelo menos 8 caracteres, com letras e números.") }}
+      {{ campo(form.confirmar, autocomplete="new-password") }}
+      <button type="submit" class="btn">Criar conta</button>
+    </form>
+    <p style="margin-top: 20px;">Já possui conta? <a href="{{ url_for('auth.login') }}">Entrar</a></p>
+  </div>
+</section>
+{% endblock %}

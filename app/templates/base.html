@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titulo %}Acesso+{% endblock %} | Acesso+</title>
+  <meta name="description" content="Acesso+: scanner de acessibilidade para sites de pequenas empresas.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='img/acesso-icone.png') }}">
+</head>
+<body>
+  <a href="#conteudo" class="skip-link">Pular para o conteúdo principal</a>
+
+  <header class="topo">
+    <a class="logo-area" href="{{ url_for('main.index') }}">
+      <img src="{{ url_for('static', filename='img/acesso-icone.png') }}" alt="" class="logo" width="51" height="48">
+      <span class="logo-texto">Acesso+</span>
+    </a>
+    <nav aria-label="Menu principal">
+      <ul class="menu">
+        {% if current_user.is_authenticated %}
+          <li><a href="{{ url_for('main.painel') }}">Meus sites</a></li>
+          <li><span class="usuario">{{ current_user.nome }}</span></li>
+          <li>
+            <form method="post" action="{{ url_for('auth.logout') }}" class="inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="link">Sair</button>
+            </form>
+          </li>
+        {% else %}
+          <li><a href="{{ url_for('main.index') }}">Início</a></li>
+          <li><a href="{{ url_for('auth.login') }}">Entrar</a></li>
+          <li><a href="{{ url_for('auth.cadastro') }}" class="btn-nav">Cadastrar</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </header>
+
+  <main id="conteudo" tabindex="-1">
+    {% with mensagens = get_flashed_messages(with_categories=true) %}
+      {% if mensagens %}
+        <div class="container avisos" role="status" style="padding-top: 24px;">
+          {% for categoria, texto in mensagens %}
+            <p class="aviso aviso-{{ categoria }}">{{ texto }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block conteudo %}{% endblock %}
+  </main>
+
+  <footer class="rodape">
+    <p>© 2026 – Projeto Acesso+ · Laboratório de Inovação II · Faculdade Senac DF</p>
+    <p>A análise automática ajuda a encontrar barreiras, mas não garante que um site seja 100% acessível.</p>
+  </footer>
+</body>
+</html>

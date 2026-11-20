@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block titulo %}Scanner de acessibilidade{% endblock %}
+{% block conteudo %}
+<section class="hero container">
+  <div class="hero-texto">
+    <span class="badge">Plataforma de acessibilidade web</span>
+    <h1>Seu site acessível, seu negócio para todos</h1>
+    <p>O Acesso+ analisa a página inicial do site da sua empresa, mostra uma nota de 0 a 100 e explica,
+      em linguagem simples, o que pode estar atrapalhando seus clientes e como corrigir.</p>
+    <div class="hero-buttons">
+      {% if current_user.is_authenticated %}
+        <a href="{{ url_for('main.painel') }}" class="btn">Ir para meus sites</a>
+      {% else %}
+        <a href="{{ url_for('auth.cadastro') }}" class="btn">Analisar meu site grátis</a>
+        <a href="{{ url_for('auth.login') }}" class="btn-outline">Já tenho conta</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <aside class="card hero-card" aria-labelledby="o-que-verifica">
+    <img src="{{ url_for('static', filename='img/acesso-logo.png') }}" alt="Logotipo do Acesso+: Seu site acessível, seu negócio para todos." class="hero-logo" width="220" height="198">
+    <h2 id="o-que-verifica">O que o Acesso+ verifica</h2>
+    <ul class="check-list">
+      <li>Imagens sem texto alternativo</li>
+      <li>Links e botões sem nome</li>
+      <li>Campos de formulário sem rótulo</li>
+      <li>Idioma, título e estrutura da página</li>
+      <li>Ajuste para celular e zoom liberado</li>
+    </ul>
+  </aside>
+</section>
+
+<section class="passos container" aria-labelledby="como-funciona">
+  <h2 id="como-funciona">Como funciona</h2>
+  <ol>
+    <li><strong>Cadastre o site</strong><br>Informe o endereço da página da sua empresa.</li>
+    <li><strong>O scanner analisa</strong><br>O Acesso+ lê a página inicial e roda 12 verificações.</li>
+    <li><strong>Veja a nota</strong><br>Nota geral de 0 a 100 e nota por categoria.</li>
+    <li><strong>Corrija</strong><br>Cada problema vem com o que é, quem afeta e como resolver.</li>
+  </ol>
+</section>
+
+<section class="beneficios container" aria-labelledby="por-que">
+  <h2 id="por-que">Por que usar o Acesso+?</h2>
+  <div class="cards">
+    <article class="card"><h3>Análise rápida</h3><p>Receba uma avaliação automática em poucos segundos.</p></article>
+    <article class="card"><h3>Inclusão digital</h3><p>Ajude pessoas com deficiência, idosos e quem usa o celular a acessar seu site.</p></article>
+    <article class="card"><h3>Linguagem simples</h3><p>Explicações sem termos técnicos, pensadas para quem não é programador.</p></article>
+  </div>
+</section>
+{% endblock %}

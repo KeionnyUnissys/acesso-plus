@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% from "_campo.html" import campo %}
+{% block titulo %}Meus sites{% endblock %}
+{% block conteudo %}
+<div class="container pagina">
+  <div>
+    <h1>Meus sites</h1>
+    <p class="sub">{{ current_user.empresas[0].nome }}</p>
+  </div>
+
+  <section class="card" aria-labelledby="novo-site">
+    <h2 id="novo-site">Nova análise de site</h2>
+    <p style="margin-bottom: 16px;">Informe o endereço do site. Depois clique em <strong>Analisar</strong> para ver a nota e os problemas encontrados.</p>
+    <form method="post" novalidate class="linha">
+      {{ form.hidden_tag() }}
+      {{ campo(form.url, autocomplete="url", dica="Exemplo: https://www.minhaloja.com.br") }}
+      <button type="submit" class="btn">Cadastrar site</button>
+    </form>
+  </section>
+
+  <section aria-labelledby="lista-sites">
+    <h2 id="lista-sites" style="margin-bottom: 12px;">Sites cadastrados</h2>
+    {% if sites %}
+      <div class="tabela"><table>
+        <thead><tr><th scope="col">Endereço</th><th scope="col">Cadastrado em</th><th scope="col">Última nota</th><th scope="col"><span class="sr">Ações</span></th></tr></thead>
+        <tbody>
+        {% for s in sites %}
+          <tr>
+            <td>{{ s.url }}</td>
+            <td data-rotulo="Cadastrado em">{{ s.data_cadastro.strftime('%d/%m/%Y') }}</td>
+            {% set concluidas = s.analises|selectattr('status', 'equalto', 'CONCLUIDA')|list %}
+            <td data-rotulo="Última nota">{% if concluidas %}<a href="{{ url_for('main.ver_analise', id_analise=concluidas[0].id_analise) }}">{{ concluidas[0].pontuacao_geral|round|int }}/100 <span class="sr">ver resultado de {{ s.url }}</span></a>{% else %}<span class="pendente">Ainda não analisado</span>{% endif %}</td>
+            <td class="acoes">
+              <form method="post" action="{{ url_for('main.analisar_site', id_site=s.id_site) }}" class="inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="botao pequeno" aria-label="Analisar {{ s.url }}">Analisar</button>
+              </form>
+              <form method="post" action="{{ url_for('main.remover_site', id_site=s.id_site) }}" class="inline">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="link perigo" aria-label="Remover {{ s.url }}">Remover</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table></div>
+    {% else %}
+      <p class="card vazio">Nenhum site cadastrado ainda. Use o formulário acima para cadastrar o primeiro.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}
