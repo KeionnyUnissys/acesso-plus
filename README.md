@@ -1,4 +1,51 @@
 # Acesso+
+## Objetivo
+
+O Acesso+ foi desenvolvido para ajudar pequenas empresas a identificar barreiras de acessibilidade em seus sites. A plataforma realiza uma análise automática da página inicial e apresenta, em linguagem simples, os principais problemas encontrados e sugestões de correção.
+
+## Tecnologias Utilizadas
+
+- Python 3.11
+- Flask
+- SQLAlchemy
+- SQLite
+- HTML5
+- CSS3
+- JavaScript
+- BeautifulSoup4
+- WTForms
+- Pytest
+
+## Telas do Sistema
+
+### Página Inicial
+
+![Página Inicial](docs/home.png)
+
+Tela de apresentação da plataforma Acesso+.
+
+### Login
+
+![Login](docs/login.png)
+
+Tela de autenticação dos usuários.
+
+### Cadastro
+
+![Cadastro](docs/cadastro.png)
+
+Tela para criação de conta.
+
+### Painel de Sites
+
+![Painel](docs/painel.png)
+
+Área onde o usuário cadastra e gerencia os sites analisados.
+
+### Resultado da Análise
+
+![Análise](docs/analise.png)
+
 
 Plataforma que analisa a página inicial do site de uma pequena empresa e mostra, em linguagem simples, as barreiras de acessibilidade encontradas.
 
